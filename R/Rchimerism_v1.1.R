@@ -454,7 +454,7 @@ server <- function(input, output, session) {
       is_coherent_input(chi_dd_output)
 
 
-#      check_sample_data(chi_dd_output)
+      check_sample_data(chi_dd_output)
 
       results <- chi_dd_output[[1]]
       sm <- chi_dd_output[[2]]
@@ -485,7 +485,7 @@ server <- function(input, output, session) {
 
       chi_sd_output <- chiSD(sdata,markers,profile,rt,dt,d,r)
       is_coherent_input(chi_sd_output)
-      #check_sample_data(chi_sd_output)
+      check_sample_data(chi_sd_output)
 
       results <- chi_sd_output[[1]]
       sm <- chi_sd_output[[2]]

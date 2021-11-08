@@ -33,7 +33,7 @@ clean_pre_file <- function(file){
   # remove V9 column. Not sure where this comes from?
   # allele_table <- allele_table[,V9:=NULL]
   
-  # write.table(allele_table, file=paste(file,"_TEMP.txt"), quote=FALSE, sep='\t', row.names = FALSE)
+  write.table(allele_table, file=paste(file,"_TEMP.txt"), quote=FALSE, sep='\t', row.names = FALSE)
   # print(typeof(allele_table))
   # return(allele_table)
   return(paste(file,"_TEMP.txt"))
@@ -61,13 +61,14 @@ get_informative_marks <- function(donor_tab, recipient_tab, sample_file){
   recipient_table <- fread(recipient_tab, sep = '\t', header= TRUE)
   # recipient_table <- data.table(recipient_tab)
   sample_table <- fread(sample_file, sep = '\t', header= TRUE, na.strings=c("", "NA"))
-  # sample_table <- na.omit(sample_table[,V9:=NULL])
+  sample_table <- sample_table[!is.na(sample_table$Marker)]
   
   # create single table with all markers/alleles from donor & recipient files
   columns <- c('Marker', 'Allele')
   donor_alleles <- donor_table[, columns, with=FALSE]
   recipient_alleles <- recipient_table[, columns, with=FALSE]
   alleles_of_interest <- rbind(donor_alleles, recipient_alleles)
+  alleles_of_interest <- alleles_of_interest[!duplicated(alleles_of_interest)]
   
   # remove all markers/alleles from sample file that don't exist in pre donor/recip files
   final_table <- data.table()
@@ -77,14 +78,14 @@ get_informative_marks <- function(donor_tab, recipient_tab, sample_file){
     allele <- sample_table[row1,]$Allele
     for (row2 in 1:nrow(alleles_of_interest)){
       if((marker == alleles_of_interest[row2,]$Marker & 
-         allele == alleles_of_interest[row2,]$Allele)){
+          allele == alleles_of_interest[row2,]$Allele)){
         final_table <- rbind(final_table,sample_table[Marker==marker & Allele == allele])
         break
       }
     }
   }
   # print(final_table)
-  # write.table(final_table, file=paste(sample_file,"_TEMP.txt"), quote=FALSE, sep='\t', row.names = FALSE)
+  write.table(final_table, file=paste(sample_file,"_TEMP.txt"), quote=FALSE, sep='\t', row.names = FALSE)
   # return(final_table)
   return(paste(sample_file,"_TEMP.txt"))
 }

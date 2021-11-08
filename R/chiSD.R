@@ -21,8 +21,8 @@ chiSD <- function(sdata,markers,profile,rt,dt,d,r) {
 print(getwd(),quote=F);
 
 #sData <- read.delim(sdata$datapath);
-
-sData <- sdata
+sData <- read.delim(sdata, sep= '\t')
+# sData <- sdata
 
 #Function to handle invalid data text files
 coherent_input <- function(any_input) {

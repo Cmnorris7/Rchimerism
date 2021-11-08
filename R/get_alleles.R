@@ -15,6 +15,7 @@ clean_pre_file <- function(file){
   
   # Remove OL alleles and select 2 entries for each marker that have the highest peaks
   clean_peak_table <- clean_peak_table[Allele != "OL"]
+  clean_peak_table <- clean_peak_table[Allele != "?"]
   allele_table <- clean_peak_table[order(Marker,-Height)]
   allele_table <- data.table(allele_table, key = "Marker")
   allele_table <- allele_table[ , head(.SD, 2), by="Marker"]

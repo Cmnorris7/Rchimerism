@@ -80,7 +80,7 @@ diff = dt - rt;
 
 profile = diff[,1];
 profile[apply(diff,1,any)] = 1; #informative locus maked as "1"
-profile[!apply(diff,1,any)] = 0; #non-inforamtive locus marked as "0"
+profile[!apply(diff,1,any)] = 0; #non-informative locus marked as "0"
 
 # classify locus (ssum/sdiff: D allele number + R allele number): 4/0: 2+2; 3/1: 2+1; 3/-1: 1+2; 2/0: 1+1
 ssum = apply(sum,1,sum);

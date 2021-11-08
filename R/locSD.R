@@ -20,8 +20,8 @@ locSD <- function(ddata,rdata,markers) {
 # dData <- read.delim(ddata$datapath)
 # rData <- read.delim(rdata$datapath)
 
-dData <- ddata
-rData <- rdata
+dData <- read.delim(ddata,sep = '\t')
+rData <- read.delim(rdata,sep = '\t')
 
 #Function to handle invalid data text files
 coherent_input <- function(any_input) {

@@ -30,7 +30,7 @@ clean_pre_file <- function(file){
     }
   }
   
-  #remove V9 column. Not sure where this comes from?
+  # remove V9 column. Not sure where this comes from?
   # allele_table <- allele_table[,V9:=NULL]
   
   # write.table(allele_table, file=paste(file,"_TEMP.txt"), quote=FALSE, sep='\t', row.names = FALSE)
@@ -61,7 +61,7 @@ get_informative_marks <- function(donor_tab, recipient_tab, sample_file){
   recipient_table <- fread(recipient_tab, sep = '\t', header= TRUE)
   # recipient_table <- data.table(recipient_tab)
   sample_table <- fread(sample_file, sep = '\t', header= TRUE, na.strings=c("", "NA"))
-  sample_table <- na.omit(sample_table[,V9:=NULL])
+  # sample_table <- na.omit(sample_table[,V9:=NULL])
   
   # create single table with all markers/alleles from donor & recipient files
   columns <- c('Marker', 'Allele')

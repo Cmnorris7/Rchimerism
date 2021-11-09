@@ -1,5 +1,6 @@
 library(sqldf)
 library(data.table)
+library(svDialogs)
 
 
 
@@ -42,7 +43,7 @@ clean_pre_file <- function(file){
 
 
 # Take in 3 files and remove unwanted peaks from sample file
-get_informative_marks <- function(donor_tab, recipient_tab, sample_file){
+get_informative_marks_sd <- function(donor_tab, recipient_tab, sample_file){
   
   # ---------- Update using library(tcltk) to change prompt text ----------
   

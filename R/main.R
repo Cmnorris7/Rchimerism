@@ -9,46 +9,52 @@ markers = c('D3S1358','TH01','D21S11','D18S51','Penta E','D5S818','D13S317','D7S
 analysis <- dlg_list(c('Donor Analysis (Pre)','Recipient Analysis (Pre)','Single Donor (Post)','Multidonor (Post)'),preselect = NULL, multiple = FALSE, title = "Chimerism Analysis",gui = .GUI)$res
 
 
+pre_analysis <- function(){
+  # input = donor peak file
+  # output = data table peak calls. will send to sql
+} #2nd
+
+
 single_donor <- function(){
   
   # get donor file
-  dlg_open(
+  donor_file <- dlg_open(
     'S:\\UHTL\\3130\\Molecular Lab Data\\Chimerism\\*',
     'Select Donor Peak Report',
     multiple = FALSE,
     filters = dlg_filters["All",],
-    gui = .GUI)$donor_file
-  
+    gui = .GUI)
+
   # get recipient file
-  dlg_open(
+  recip_file <- dlg_open(
     'S:\\UHTL\\3130\\Molecular Lab Data\\Chimerism\\*',
     'Select Recipient Peak Report',
     multiple = FALSE,
     filters = dlg_filters["All",],
-    gui = .GUI)$recipient_file
+    gui = .GUI)
   
-  print(donor_file)
-  ddata <- clean_pre_file(donor_file)
-  rdata <- clean_pre_file(recipient_file)
+  ddata <- clean_pre_file(donor_file$res)
+  rdata <- clean_pre_file(recip_file$res)
   sdata <- get_informative_marks_sd(ddata, rdata, )
   
-  test <- locSD(ddata, rdata, markers)
+  loci <- locSD(ddata, rdata, markers)
   
-  profile <- test[[2]]
-  rt <- test[[3]]
-  dt <- test[[4]]
-  dm <- test[[5]]
-  rm <- test[[6]]
-  d <- test[[7]]
-  r <- test[[8]]
+  profile <- loci[[2]]
+  rt <- loci[[3]]
+  dt <- loci[[4]]
+  dm <- loci[[5]]
+  rm <- loci[[6]]
+  d <- loci[[7]]
+  r <- loci[[8]]
   
-  test2 <- chiSD(sdata,markers,profile,rt,dt,d,r)
-  print(test2)
+  percents <- chiSD(sdata,markers,profile,rt,dt,d,r)
   
-  results <- test2[[1]]
+  print(percents)
+  
+  results <- percents[[1]]
   print(results[,1:3])
   return(results)
-}
+} 
 
 
 multi_donor <- function(){
@@ -58,26 +64,56 @@ multi_donor <- function(){
   rdata <- clean_pre_file()
   sdata <- get_informative_marks_dd(d1data, d2data, rdata, )
   
-  test <- locSD(ddata, rdata, markers)
+  loc_dd_output <- locDD(ddata, rdata, markers)
   
-  profile <- test[[2]]
-  rt <- test[[3]]
-  dt <- test[[4]]
-  dm <- test[[5]]
-  rm <- test[[6]]
-  d <- test[[7]]
-  r <- test[[8]]
+  profile <- loc_dd_output[[2]]
+  ru <- loc_dd_output[[3]]
+  rt <- loc_dd_output[[4]]
+  rnn <- loc_dd_output[[5]]
+  d1nn <- loc_dd_output[[6]]
+  d2nn <- loc_dd_output[[7]]
+  d1u <- loc_dd_output[[8]]
+  d2u <- loc_dd_output[[9]]
+  d1t <- loc_dd_output[[10]]
+  d2t <- loc_dd_output[[11]]
+  r <- loc_dd_output[[12]]
+  d1m <- loc_dd_output[[13]]
+  d2m <- loc_dd_output[[14]]
+  rm <- loc_dd_output[[15]]
   
-  test2 <- chiSD(sdata,markers,profile,rt,dt,d,r)
-  print(test2)
+  chi_dd_output <-  chiDD(sdata,markers,profile,
+                          ru,rt,rnn,d1nn,d2nn,d1u,d2u,d1t,d2t,r)
   
-  results <- test2[[1]]
+  results <- chi_dd_output[[1]]
+  print(results)
   print(results[,1:3])
   return(results)
-}
+} #1st
+
+
+pre_to_sql <- function(){
+  # input = data table from donor/recip analysis
+  # output = updated sql file
+} #3rd
+
+
+fetch_pre_sql <- function(){
+  # input = database file
+  # output = temp pre files
+} #4th
+
+
+
 
 if (analysis == "Single Donor (Post)"){
   single_donor()
+} else if (analysis == "Multidonor (Post)"){
+  multi_donor()
+} else if (analysis == "Donor Analysis (Pre)"){
+  print("Donor analysis workflow")
+} else if (analysis == "Recipient Analysis (Pre)"){
+  print("Recipient analysis workflow")
 }
+
 
 

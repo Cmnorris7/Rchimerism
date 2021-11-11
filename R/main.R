@@ -25,29 +25,9 @@ pre_analysis <- function(){
 
 single_donor <- function(){
   
-<<<<<<< Updated upstream
-  # get donor file
-  donor_file <- dlg_open(
-    'S:\\UHTLor Peak Report',
-    multiple = FALSE,
-    filters = dlg_filters["All",],
-    gui = .GUI)\\3130\\Molecular Lab Data\\Chimerism\\*',
-    'Select Don
-
-  # get recipient file
-  recip_file <- dlg_open(
-    'S:\\UHTL\\3130\\Molecular Lab Data\\Chimerism\\*',
-    'Select Recipient Peak Report',
-    multiple = FALSE,
-    filters = dlg_filters["All",],
-    gui = .GUI)
-  
-  ddata <- clean_pre_file(donor_file$res)
-  rdata <- clean_pre_file(recip_file$res)
-=======
   ddata <- clean_pre_file()
   rdata <- clean_pre_file()
->>>>>>> Stashed changes
+
   sdata <- get_informative_marks_sd(ddata, rdata, )
   print(recip_file$res)
   loci <- locSD(ddata, rdata, markers)

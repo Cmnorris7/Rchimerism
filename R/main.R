@@ -1,9 +1,17 @@
-source('P:\\Rchimerism_github\\R\\get_alleles.R')
-source('P:\\Rchimerism_github\\R\\Rchimerism_v1.1.R')
-source('P:\\Rchimerism_github\\R\\locSD.R')
-source('P:\\Rchimerism_github\\R\\chiSD.R')
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+
+source('get_alleles.R')
+source('Rchimerism_v1.1.R')
+source('locSD.R')
+source('chiSD.R')
+
+# install.packages('svDialogs')
+# install.packages('sqldf')
+# install.packages('data.table')
+
+
 library(svDialogs)
-getwd()
+
 markers = c('D3S1358','TH01','D21S11','D18S51','Penta E','D5S818','D13S317','D7S820','D16S539','CSF1PO','Penta D','vWA','D8S1179','TPOX','FGA');
 
 analysis <- dlg_list(c('Donor Analysis (Pre)','Recipient Analysis (Pre)','Single Donor (Post)','Multidonor (Post)'),preselect = NULL, multiple = FALSE, title = "Chimerism Analysis",gui = .GUI)$res
@@ -19,11 +27,11 @@ single_donor <- function(){
   
   # get donor file
   donor_file <- dlg_open(
-    'S:\\UHTL\\3130\\Molecular Lab Data\\Chimerism\\*',
-    'Select Donor Peak Report',
+    'S:\\UHTLor Peak Report',
     multiple = FALSE,
     filters = dlg_filters["All",],
-    gui = .GUI)
+    gui = .GUI)\\3130\\Molecular Lab Data\\Chimerism\\*',
+    'Select Don
 
   # get recipient file
   recip_file <- dlg_open(
@@ -36,7 +44,7 @@ single_donor <- function(){
   ddata <- clean_pre_file(donor_file$res)
   rdata <- clean_pre_file(recip_file$res)
   sdata <- get_informative_marks_sd(ddata, rdata, )
-  
+  print(recip_file$res)
   loci <- locSD(ddata, rdata, markers)
   
   profile <- loci[[2]]

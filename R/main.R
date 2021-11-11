@@ -25,6 +25,7 @@ pre_analysis <- function(){
 
 single_donor <- function(){
   
+<<<<<<< Updated upstream
   # get donor file
   donor_file <- dlg_open(
     'S:\\UHTLor Peak Report',
@@ -43,6 +44,10 @@ single_donor <- function(){
   
   ddata <- clean_pre_file(donor_file$res)
   rdata <- clean_pre_file(recip_file$res)
+=======
+  ddata <- clean_pre_file()
+  rdata <- clean_pre_file()
+>>>>>>> Stashed changes
   sdata <- get_informative_marks_sd(ddata, rdata, )
   print(recip_file$res)
   loci <- locSD(ddata, rdata, markers)

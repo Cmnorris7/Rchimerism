@@ -8,9 +8,16 @@ library(svDialogs)
 # Take in peak sizing file (donor_pre or recipient_pre) and return true allele calls
 clean_pre_file <- function(file){
   if(missing(file)){
-    file <- file.choose(new = FALSE)
+    raw_file <- dlg_open(
+      'S:\\UHTL\\3130\\Molecular Lab Data\\Chimerism\\*',
+      'Select Donor Peak Report',
+      multiple = FALSE,
+      filters = dlg_filters["All",],
+      gui = .GUI)
+    peak_table <- fread(raw_file$res, sep = '\t', header= TRUE, na.strings=c("", "NA"))
+  } else{
+    peak_table <- fread(file, sep = '\t', header= TRUE, na.strings=c("", "NA"))
   }
-  peak_table <- fread(file, sep = '\t', header= TRUE, na.strings=c("", "NA"))
   clean_peak_table <- peak_table[!is.na(peak_table$Marker),]
   markers <- unique(clean_peak_table$Marker)
   
@@ -35,10 +42,10 @@ clean_pre_file <- function(file){
   # remove V9 column. Not sure where this comes from?
   # allele_table <- allele_table[,V9:=NULL]
   
-  write.table(allele_table, file=paste(file,"_TEMP.txt"), quote=FALSE, sep='\t', row.names = FALSE)
+  write.table(allele_table, file=paste(raw_file$res,"_TEMP.txt"), quote=FALSE, sep='\t', row.names = FALSE)
   # print(typeof(allele_table))
   # return(allele_table)
-  return(paste(file,"_TEMP.txt"))
+  return(paste(raw_file$res,"_TEMP.txt"))
 }
 
 

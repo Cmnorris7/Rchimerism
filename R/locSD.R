@@ -20,8 +20,12 @@ locSD <- function(ddata,rdata,markers) {
 # dData <- read.delim(ddata$datapath)
 # rData <- read.delim(rdata$datapath)
 
-dData <- read.delim(ddata,sep = '\t')
-rData <- read.delim(rdata,sep = '\t')
+# dData <- read.delim(ddata,sep = '\t')
+# rData <- read.delim(rdata,sep = '\t')
+
+dData <- data.frame(ddata)
+rData <- data.frame(rdata)
+
 
 #Function to handle invalid data text files
 coherent_input <- function(any_input) {
@@ -38,24 +42,31 @@ if(!is.null(ci_r)) {
   return(ci_r)
 }
 
+
 #clean up the raw data (OL, X, '')
-r = rData[grep("[^[:alpha:]]",rData[,4]),c(3:4,7)];
-d = dData[grep("[^[:alpha:]]",dData[,4]),c(3:4,7)];
+# r = rData[grep("[^[:alnum:]]",rData[,4]),c(3:4,7)];
+# d = dData[grep("[^[:alnum:]]",dData[,4]),c(3:4,7)];
+
+r <- rData[,c(3:4,7)]
+d <- dData[,c(3:4,7)]
+
 
 rr = droplevels(r); #fantom levels can cause problem, rr, dd are tem variables
 dd = droplevels(d);
 
-#get rid of the noise (less than half of the maximum area)
-maxR = tapply(rr[,3],rr[,1],max)/2;
-r = rr[rr[,3]>maxR[rr[,1]],];
 
-maxD = tapply(dd[,3],dd[,1],max)/2;
-d = dd[dd[,3]>maxD[dd[,1]],];
+# get rid of the noise (less than half of the maximum area)
+# maxR = tapply(rr[,3],rr[,1],max)/2;
+# r = rr[rr[,3]>maxR[rr[,1]],];
+# 
+# maxD = tapply(dd[,3],dd[,1],max)/2;
+# d = dd[dd[,3]>maxD[dd[,1]],];
 
 #Allele matrix and calculation;
-r[,4] = 'r';
-d[,4] = 'd';
+r$V4 = 'r';
+d$V4 = 'd';
 rd = rbind(r,d);
+
 
 #Compare rd with markers, end program if user defined markers not in input
 xtra_in_markers <- setdiff(markers,rd[,1])

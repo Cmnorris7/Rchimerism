@@ -31,9 +31,9 @@ locDD <- function(donor1_data, donor2_data,recipient_data,markers) {
 # d2Data <- read.delim(d2data$datapath)
 # rData <- read.delim(rdata$datapath)
 
-d1Data <- donor1_data
-d2Data <- donor2_data
-rData <- recipient_data
+d1Data <- read.delim(donor1_data, sep='\t')
+d2Data <- read.delim(donor2_data, sep='\t')
+rData <- read.delim(recipient_data, sep= '\t')
 
 #Function to handle invalid data text files
 coherent_input <- function(any_input) {

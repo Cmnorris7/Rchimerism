@@ -18,10 +18,10 @@
 #
 chiSD <- function(sdata,markers,profile,rt,dt,d,r) {
 #load('data/locusSD.RData'); #load the previous workplace (r, d, markers, profile)
-print(getwd(),quote=F);
+
 
 #sData <- read.delim(sdata$datapath);
-
+# sData <- read.delim(sdata, sep= '\t')
 sData <- sdata
 
 #Function to handle invalid data text files
@@ -60,10 +60,10 @@ if (nrow(s[!(s[,2] %in% colnames(st)),]) != 0) {
 }
 
 #check point: donor and receipient matrix
-#print("Donor Allele Matrix", quote = F);
-#print(dm);
-#print("Receipient Allele Matrix", quote = F);
-#print(rm);
+# print("Donor Allele Matrix", quote = F);
+# print(dm);
+# print("Receipient Allele Matrix", quote = F);
+# print(rm);
 
 
 st[as.matrix(s[,1:2])] = 1;
@@ -78,10 +78,10 @@ sa[as.matrix(s[,1:2])] = s[,3];
 #proD = rep(profile,table(d[,1])[markers]);
 
 C = profile; #chimerism matrix (donor percentage)
-
+print(C)
 # calculate percent donor chimerism based on general formula and specific formula
 for (m in markers){
-
+  print(profile[m])
 	if (profile[m]==211){
 		Ad = s[s[,1]==m & s[,2]==setdiff(d[d[,1]==m,2],r[r[,1]==m,2]),3];
 		A = s[s[,1]==m & s[,2]==intersect(d[d[,1]==m,2],r[r[,1]==m,2]),3];

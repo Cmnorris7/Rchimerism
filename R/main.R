@@ -41,10 +41,9 @@ single_donor <- function(){
   
   percents <- chiSD(sdata,markers,profile,rt,dt,d,r)
   
-  print(percents)
   
   results <- percents[[1]]
-  print(results[,1:3])
+  print(results)
   return(results)
 } 
 

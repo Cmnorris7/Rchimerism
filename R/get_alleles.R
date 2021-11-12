@@ -40,9 +40,9 @@ clean_pre_file <- function(file){
   
   # remove V9 column. Not sure where this comes from?
   # allele_table <- allele_table[,V9:=NULL]
-  
-  write.table(allele_table, file=paste(raw_file$res,"_TEMP.txt"), quote=FALSE, sep='\t', row.names = FALSE)
-  print(is.data.frame(allele_table))
+  # 
+  # write.table(allele_table, file=paste(raw_file$res,"_TEMP.txt"), quote=FALSE, sep='\t', row.names = FALSE)
+  # print(is.data.frame(allele_table))
   return(allele_table)
   # return(paste(raw_file$res,"_TEMP.txt"))
 }
@@ -59,7 +59,15 @@ get_informative_marks_sd <- function(donor_tab, recipient_tab, sample_file){
   #   recipient_tab <- file.choose(new = FALSE)
   # }
   if(missing(sample_file)){
-    sample_file <- file.choose(new = FALSE)
+    raw_file <- dlg_open(
+      'S:\\UHTL\\3130\\Molecular Lab Data\\Chimerism\\*',
+      'Select Donor Peak Report',
+      multiple = FALSE,
+      filters = dlg_filters["All",],
+      gui = .GUI)
+    sample_table <- fread(raw_file$res, sep = '\t', header= TRUE, na.strings=c("", "NA"))
+  } else{
+    sample_table <- fread(sample_file, sep = '\t', header= TRUE, na.strings=c("", "NA"))
   }
   
   # read files into tables
@@ -67,7 +75,6 @@ get_informative_marks_sd <- function(donor_tab, recipient_tab, sample_file){
   donor_table <- data.table(donor_tab)
   # recipient_table <- fread(recipient_tab, sep = '\t', header= TRUE)
   recipient_table <- data.table(recipient_tab)
-  sample_table <- fread(sample_file, sep = '\t', header= TRUE, na.strings=c("", "NA"))
   sample_table <- sample_table[!is.na(sample_table$Marker)]
   
   # create single table with all markers/alleles from donor & recipient files

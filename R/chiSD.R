@@ -13,7 +13,6 @@
 #'
 
 
-
 #sdata,markers,rt,dm,rm
 #
 chiSD <- function(sdata,markers,profile,rt,dt,d,r) {
@@ -78,7 +77,7 @@ sa[as.matrix(s[,1:2])] = s[,3];
 #proD = rep(profile,table(d[,1])[markers]);
 
 C = profile; #chimerism matrix (donor percentage)
-print(C)
+
 # calculate percent donor chimerism based on general formula and specific formula
 for (m in markers){
   print(profile[m])

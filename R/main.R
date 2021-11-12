@@ -4,6 +4,8 @@ source('get_alleles.R')
 source('Rchimerism_v1.1.R')
 source('locSD.R')
 source('chiSD.R')
+source('locDD.R')
+source('chiDD.R')
 
 # install.packages('svDialogs')
 # install.packages('sqldf')
@@ -12,8 +14,13 @@ source('chiSD.R')
 
 library(svDialogs)
 
+# garbage collection to clear up memory
+gc()
+
+# markers used in chimerism assay. These are static.
 markers = c('D3S1358','TH01','D21S11','D18S51','Penta E','D5S818','D13S317','D7S820','D16S539','CSF1PO','Penta D','vWA','D8S1179','TPOX','FGA');
 
+# Prompt the user to select workflow
 analysis <- dlg_list(c('Donor Analysis (Pre)','Recipient Analysis (Pre)','Single Donor (Post)','Multidonor (Post)'),preselect = NULL, multiple = FALSE, rstudio=FALSE, title = "Chimerism Analysis",gui = .GUI)$res
 
 
@@ -56,7 +63,7 @@ multi_donor <- function(){
   rdata <- clean_pre_file()
   sdata <- get_informative_marks_dd(d1data, d2data, rdata, )
   
-  loc_dd_output <- locDD(ddata, rdata, markers)
+  loc_dd_output <- locDD(d1data, d2data, rdata, markers)
   
   profile <- loc_dd_output[[2]]
   ru <- loc_dd_output[[3]]
@@ -77,8 +84,8 @@ multi_donor <- function(){
                           ru,rt,rnn,d1nn,d2nn,d1u,d2u,d1t,d2t,r)
   
   results <- chi_dd_output[[1]]
-  print(results)
-  print(results[,1:3])
+
+  print(results[,c(1:3,5:7,9:11)])
   return(results)
 } #1st
 

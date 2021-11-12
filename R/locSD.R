@@ -90,7 +90,7 @@ diff = dt - rt;
 ###########
 
 profile = diff[,1];
-profile[apply(diff,1,any)] = 1; #informative locus maked as "1"
+profile[apply(diff,1,any)] = 1; #informative locus marked as "1"
 profile[!apply(diff,1,any)] = 0; #non-informative locus marked as "0"
 
 # classify locus (ssum/sdiff: D allele number + R allele number): 4/0: 2+2; 3/1: 2+1; 3/-1: 1+2; 2/0: 1+1
@@ -104,7 +104,7 @@ sdiff = apply(diff,1,sum);
 l221 = apply(sum==1,1,any)& apply(sum==2,1,any)& ssum==4 & sdiff==0; #221: 2(donor)2(receipient)1(one shared)
 profile[l221] = 221;
 
-l121 = ssum==3 & sdiff==-1 & apply(sum==2,1,any);
+l121 = ssum==3 & sdiff==-1 & apply(sum==2,1,any); #121 1(donor)2(recipient)1(one shared)
 profile[l121] = 121;
 
 l211 = ssum==3 & sdiff==1 & apply(sum==2,1,any);

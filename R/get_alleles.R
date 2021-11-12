@@ -9,7 +9,7 @@ clean_pre_file <- function(file){
   if(missing(file)){
     raw_file <- dlg_open(
       'S:\\UHTL\\3130\\Molecular Lab Data\\Chimerism\\*',
-      'Select Donor Peak Report',
+      'Select Peak Report',
       multiple = FALSE,
       filters = dlg_filters["All",],
       gui = .GUI)
@@ -61,7 +61,7 @@ get_informative_marks_sd <- function(donor_tab, recipient_tab, sample_file){
   if(missing(sample_file)){
     raw_file <- dlg_open(
       'S:\\UHTL\\3130\\Molecular Lab Data\\Chimerism\\*',
-      'Select Donor Peak Report',
+      'Select Peak Report',
       multiple = FALSE,
       filters = dlg_filters["All",],
       gui = .GUI)

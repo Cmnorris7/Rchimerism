@@ -12,8 +12,13 @@ source('chiSD.R')
 
 library(svDialogs)
 
+# garbage collection to clear up memory
+gc()
+
+# markers used in chimerism assay. These are static.
 markers = c('D3S1358','TH01','D21S11','D18S51','Penta E','D5S818','D13S317','D7S820','D16S539','CSF1PO','Penta D','vWA','D8S1179','TPOX','FGA');
 
+# Prompt the user to select workflow
 analysis <- dlg_list(c('Donor Analysis (Pre)','Recipient Analysis (Pre)','Single Donor (Post)','Multidonor (Post)'),preselect = NULL, multiple = FALSE, rstudio=FALSE, title = "Chimerism Analysis",gui = .GUI)$res
 
 

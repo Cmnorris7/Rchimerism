@@ -27,6 +27,7 @@ single_donor <- function(){
   
   ddata <- clean_pre_file()
   rdata <- clean_pre_file()
+
   sdata <- get_informative_marks_sd(ddata, rdata, )
 
   loci <- locSD(ddata, rdata, markers)

@@ -105,3 +105,67 @@ get_informative_marks_sd <- function(donor_tab, recipient_tab, sample_file){
 }
 
 
+# Take in 4 files and remove unwanted peaks from sample file
+get_informative_marks_dd <- function(donor1_tab, donor2_tab, recipient_tab, sample_file){
+  
+  
+  # if(missing(donor_tab)){
+  #   donor_tab <- file.choose(new = FALSE)
+  # }
+  # if(missing(recipient_tab)){
+  #   recipient_tab <- file.choose(new = FALSE)
+  # }
+  if(missing(sample_file)){
+    raw_file <- dlg_open(
+      'S:\\UHTL\\3130\\Molecular Lab Data\\Chimerism\\*',
+      'Select Peak Report',
+      multiple = FALSE,
+      filters = dlg_filters["All",],
+      gui = .GUI)
+    sample_table <- fread(raw_file$res, sep = '\t', header= TRUE, na.strings=c("", "NA"))
+  } else{
+    sample_table <- fread(sample_file, sep = '\t', header= TRUE, na.strings=c("", "NA"))
+  }
+  
+  # read files into tables
+  # donor_table <- fread(donor_tab, sep = '\t', header= TRUE)
+  donor1_table <- data.table(donor1_tab)
+  donor2_table <- data.table(donor2_tab)
+  # recipient_table <- fread(recipient_tab, sep = '\t', header= TRUE)
+  recipient_table <- data.table(recipient_tab)
+  sample_table <- sample_table[!is.na(sample_table$Marker)]
+  
+  # create single table with all markers/alleles from donor & recipient files
+  columns <- c('Marker', 'Allele')
+  donor1_alleles <- donor1_table[, columns, with=FALSE]
+  donor2_alleles <- donor2_table[, columns, with=FALSE]
+  
+  donor_alleles <- rbind(donor1_alleles, donor2_alleles)
+  print(donor1_alleles)
+  print(donor2_alleles)
+  print(donor_alleles)
+  recipient_alleles <- recipient_table[, columns, with=FALSE]
+  alleles_of_interest <- rbind(donor_alleles, recipient_alleles)
+  alleles_of_interest <- alleles_of_interest[!duplicated(alleles_of_interest)]
+  
+  # remove all markers/alleles from sample file that don't exist in pre donor/recip files
+  final_table <- data.table()
+  count <- 0
+  for (row1 in 1:nrow(sample_table)){
+    marker <- sample_table[row1,]$Marker
+    allele <- sample_table[row1,]$Allele
+    for (row2 in 1:nrow(alleles_of_interest)){
+      if((marker == alleles_of_interest[row2,]$Marker & 
+          allele == alleles_of_interest[row2,]$Allele)){
+        final_table <- rbind(final_table,sample_table[Marker==marker & Allele == allele])
+        break
+      }
+    }
+  }
+  # print(final_table)
+  # write.table(final_table, file=paste(sample_file,"_TEMP.txt"), quote=FALSE, sep='\t', row.names = FALSE)
+  return(data.frame(final_table))
+  # return(paste(sample_file,"_TEMP.txt"))
+}
+
+

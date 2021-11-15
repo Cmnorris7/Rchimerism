@@ -1,11 +1,8 @@
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 source('get_alleles.R')
-source('Rchimerism_v1.1.R')
-source('locSD.R')
-source('chiSD.R')
-source('locDD.R')
-source('chiDD.R')
+source('Rchimerism_functions.R')
+
 
 # install.packages('svDialogs')
 # install.packages('sqldf')
@@ -52,6 +49,15 @@ single_donor <- function(){
   
   results <- percents[[1]]
   print(results)
+  donor_mean <- unique(na.omit(results[,3]))
+  donor_sd <- unique(na.omit(results[,4]))
+  recip_mean <- unique(na.omit(results[,6]))
+  print("--DONOR MEAN--")
+  print(donor_mean)
+  print("--DONOR SD--")
+  print(donor_sd)
+  print("--RECIPIENT MEAN--")
+  print(recip_mean)
   return(results)
 } 
 
@@ -84,10 +90,28 @@ multi_donor <- function(){
                           ru,rt,rnn,d1nn,d2nn,d1u,d2u,d1t,d2t,r)
   
   results <- chi_dd_output[[1]]
-
-  print(results[,c(1:3,5:7,9:11)])
+  edit_results <- head(results,-1)
+  print(edit_results)
+  donor1_mean <- unique(na.omit(edit_results[,2]))
+  donor1_sd <- unique(na.omit(edit_results[,3]))
+  donor2_mean <- unique(na.omit(edit_results[,6]))
+  donor2_sd <- unique(na.omit(edit_results[,7]))
+  recip_mean <- unique(na.omit(edit_results[,10]))
+  recip_sd <- unique(na.omit(edit_results[,11]))
+  print("--DONOR 1 MEAN--")
+  print(donor1_mean)
+  print("--DONOR 1 SD--")
+  print(donor1_sd)
+  print("--DONOR 2 MEAN--")
+  print(donor2_mean)
+  print("--DONOR 2 SD--")
+  print(donor2_sd)  
+  print("--RECIPIENT MEAN--")
+  print(recip_mean)
+  print("--RECIPIENT SD--")
+  print(recip_sd)  
   return(results)
-} #1st
+}
 
 
 pre_to_sql <- function(){

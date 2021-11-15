@@ -141,9 +141,7 @@ get_informative_marks_dd <- function(donor1_tab, donor2_tab, recipient_tab, samp
   donor2_alleles <- donor2_table[, columns, with=FALSE]
   
   donor_alleles <- rbind(donor1_alleles, donor2_alleles)
-  print(donor1_alleles)
-  print(donor2_alleles)
-  print(donor_alleles)
+
   recipient_alleles <- recipient_table[, columns, with=FALSE]
   alleles_of_interest <- rbind(donor_alleles, recipient_alleles)
   alleles_of_interest <- alleles_of_interest[!duplicated(alleles_of_interest)]

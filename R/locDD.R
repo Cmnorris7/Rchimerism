@@ -141,11 +141,11 @@ colnames(rm) = colnames(d1m);
 
 #save.image(file='locusDD.RData');
 
-print("Donor 1 Allele Matrix", quote=F);
-print(d1m);
-print("Donor 2 Allele Matrix", quote=F);
-print(d2m);
-print("Receipient Allele Matrix", quote = F);
-print(rm);
+# print("Donor 1 Allele Matrix", quote=F);
+# print(d1m);
+# print("Donor 2 Allele Matrix", quote=F);
+# print(d2m);
+# print("Receipient Allele Matrix", quote = F);
+# print(rm);
 return(list(markers,profile,ru,rt,rnn,d1nn,d2nn,d1u,d2u,d1t,d2t,r,d1m,d2m,rm))
 }

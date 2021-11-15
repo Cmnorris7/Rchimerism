@@ -2,29 +2,45 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 source('get_alleles.R')
 source('Rchimerism_functions.R')
-
+source('database.R')
 
 # install.packages('svDialogs')
 # install.packages('sqldf')
 # install.packages('data.table')
-
+# install.packages('RSQLite')
 
 library(svDialogs)
+library(DBI)
+library(RSQLite)
+library(sqldf)
+library(data.table)
+library(svDialogs)
+
 
 # garbage collection to clear up memory
 gc()
 
 # markers used in chimerism assay. These are static.
-markers = c('D3S1358','TH01','D21S11','D18S51','Penta E','D5S818','D13S317','D7S820','D16S539','CSF1PO','Penta D','vWA','D8S1179','TPOX','FGA');
+markers = c('D3S1358','TH01','D21S11','D18S51','Penta E','D5S818','D13S317',
+            'D7S820','D16S539','CSF1PO','Penta D','vWA','D8S1179','TPOX','FGA');
 
 # Prompt the user to select workflow
-analysis <- dlg_list(c('Donor Analysis (Pre)','Recipient Analysis (Pre)','Single Donor (Post)','Multidonor (Post)'),preselect = NULL, multiple = FALSE, rstudio=FALSE, title = "Chimerism Analysis",gui = .GUI)$res
+analysis <- dlg_list(
+  c('Donor Analysis (Pre)','Recipient Analysis (Pre)',
+    'Single Donor (Post)','Multidonor (Post)'),
+  preselect = NULL, 
+  multiple = FALSE, 
+  rstudio=FALSE, 
+  title = "Chimerism Analysis",
+  gui = .GUI)$res
 
 
-pre_analysis <- function(){
-  # input = donor peak file
-  # output = data table peak calls. will send to sql
-} #2nd
+pre_analysis <- function(role){
+  add <- clean_pre_file()
+  add$role <- rep_len(role,nrow(add))
+  print(add)
+  pre_to_sql(add)
+}
 
 
 single_donor <- function(){
@@ -114,12 +130,6 @@ multi_donor <- function(){
 }
 
 
-pre_to_sql <- function(){
-  # input = data table from donor/recip analysis
-  # output = updated sql file
-} #3rd
-
-
 fetch_pre_sql <- function(){
   # input = database file
   # output = temp pre files
@@ -130,12 +140,26 @@ fetch_pre_sql <- function(){
 
 if (analysis == "Single Donor (Post)"){
   single_donor()
+  
 } else if (analysis == "Multidonor (Post)"){
   multi_donor()
+  
 } else if (analysis == "Donor Analysis (Pre)"){
-  print("Donor analysis workflow")
+  write_attempt <- try(pre_analysis("donor"))
+  if("try-error" %in% class(write_attempt)) {
+    print("Donor pre-transplant sample already in database.")
+  } else {
+    print("Donor pre-transplant sample saved to database.")
+  }
+  
 } else if (analysis == "Recipient Analysis (Pre)"){
-  print("Recipient analysis workflow")
+  write_attempt <- try(pre_analysis("recipient"))
+  if("try-error" %in% class(write_attempt)) {
+    print("Recipient pre-transplant sample already in database.")
+    break
+  } else {
+    print("Recipient pre-transplant sample saved to database.")
+  }
 }
 
 

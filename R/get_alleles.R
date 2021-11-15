@@ -1,6 +1,4 @@
-library(sqldf)
-library(data.table)
-library(svDialogs)
+
 
 
 
@@ -39,11 +37,13 @@ clean_pre_file <- function(file){
   }
   
   # remove V9 column. Not sure where this comes from?
-  # allele_table <- allele_table[,V9:=NULL]
+  allele_table <- allele_table[,V9:=NULL]
   # 
   # write.table(allele_table, file=paste(raw_file$res,"_TEMP.txt"), quote=FALSE, sep='\t', row.names = FALSE)
   # print(is.data.frame(allele_table))
+  print(allele_table)
   return(allele_table)
+
   # return(paste(raw_file$res,"_TEMP.txt"))
 }
 

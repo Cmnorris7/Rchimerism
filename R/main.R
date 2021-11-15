@@ -1,11 +1,8 @@
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 source('get_alleles.R')
-source('Rchimerism_v1.1.R')
-source('locSD.R')
-source('chiSD.R')
-source('locDD.R')
-source('chiDD.R')
+source('Rchimerism_functions.R')
+
 
 # install.packages('svDialogs')
 # install.packages('sqldf')

@@ -80,7 +80,6 @@ C = profile; #chimerism matrix (donor percentage)
 
 # calculate percent donor chimerism based on general formula and specific formula
 for (m in markers){
-  print(profile[m])
 	if (profile[m]==211){
 		Ad = s[s[,1]==m & s[,2]==setdiff(d[d[,1]==m,2],r[r[,1]==m,2]),3];
 		A = s[s[,1]==m & s[,2]==intersect(d[d[,1]==m,2],r[r[,1]==m,2]),3];
@@ -152,12 +151,12 @@ sm = cbind(st,apply(st,1,sum));
 colnames(sm)[length(colnames(sm))] = 'Sum';
 
 
-print("Sample Allele Matrix", quote = F);
-print(sm);
-print("Sample Allele Area Matrix", quote = F);
-print(sa);
-print("Final Results", quote = F);
-print(results);
+# print("Sample Allele Matrix", quote = F);
+# print(sm);
+# print("Sample Allele Area Matrix", quote = F);
+# print(sa);
+# print("Final Results", quote = F);
+# print(results);
 
 return(list(results,sm))
 }

@@ -147,12 +147,12 @@ colnames(sm)[length(colnames(sm))] = 'Sum';
 
 
 
-print("Sample Allele Matrix", quote = F);
-print(sm);
-print("Sample Allele Area", quote = F);
-print(sa);
-print("Final Results", quote = F);
-print(results);
+# print("Sample Allele Matrix", quote = F);
+# print(sm);
+# print("Sample Allele Area", quote = F);
+# print(sa);
+# print("Final Results", quote = F);
+# print(results);
 return(list(results,sm))
 }
 

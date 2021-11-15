@@ -120,9 +120,9 @@ colnames(rm)[length(colnames(rm))] = 'Sum';
 #save.image(file='data/locusSD.RData');
 
 
-print("Donor Allele Matrix", quote = F);
-print(dm);
-print("Recipient Allele Matrix", quote = F);
-print(rm);
+# print("Donor Allele Matrix", quote = F);
+# print(dm);
+# print("Recipient Allele Matrix", quote = F);
+# print(rm);
 return(list(markers,profile,rt,dt,dm,rm,d,r))
 }

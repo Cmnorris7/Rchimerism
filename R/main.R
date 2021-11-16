@@ -46,7 +46,11 @@ pre_analysis <- function(role){
 single_donor <- function(){
   
   ddata <- clean_pre_file()
+  print('--DONOR PEAKS--')
+  print(ddata)
   rdata <- clean_pre_file()
+  print('--RECIPIENT PEAKS--')
+  print(rdata)
 
   sdata <- get_informative_marks_sd(ddata, rdata, )
 
@@ -58,7 +62,10 @@ single_donor <- function(){
   dm <- loci[[5]]
   rm <- loci[[6]]
   d <- loci[[7]]
+  d <- d[,c(1,2,4)] # working without peak area?
   r <- loci[[8]]
+  r <- r[,c(1,2,4)] # working without peak area?
+
   
   percents <- chiSD(sdata,markers,profile,rt,dt,d,r)
   

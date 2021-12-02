@@ -47,9 +47,9 @@ clean_pre_file <- function(file){
   write.table(allele_table, file=paste(file,"_TEMP.txt"), quote=FALSE, sep='\t', row.names = FALSE)
   # print(is.data.frame(allele_table))
   # print(allele_table)
-  return(allele_table)
-  
-  # return(paste(raw_file$res,"_TEMP.txt"))
+  # return(allele_table)
+  # 
+  return(paste(file,"_TEMP.txt"))
 }
 
 
@@ -78,10 +78,10 @@ get_informative_marks_sd <- function(donor_tab, recipient_tab, sample_file){
   # }
   
   # read files into tables
-  # donor_table <- fread(donor_tab, sep = '\t', header= TRUE)
-  donor_table <- data.table(donor_tab)
-  # recipient_table <- fread(recipient_tab, sep = '\t', header= TRUE)
-  recipient_table <- data.table(recipient_tab)
+  donor_table <- fread(donor_tab, sep = '\t', header= TRUE)
+  # donor_table <- data.table(donor_tab)
+  recipient_table <- fread(recipient_tab, sep = '\t', header= TRUE)
+  # recipient_table <- data.table(recipient_tab)
   sample_table <- sample_table[!is.na(sample_table$Marker)]
   
   # create single table with all markers/alleles from donor & recipient files
@@ -198,11 +198,11 @@ locSD <- function(ddata,rdata,markers) {
   # dData <- read.delim(ddata$datapath)
   # rData <- read.delim(rdata$datapath)
   
-  # dData <- read.delim(ddata,sep = '\t')
-  # rData <- read.delim(rdata,sep = '\t')
+  dData <- read.delim(ddata,sep = '\t')
+  rData <- read.delim(rdata,sep = '\t')
   
-  dData <- data.frame(ddata)
-  rData <- data.frame(rdata)
+  # dData <- data.frame(ddata)
+  # rData <- data.frame(rdata)
   
   
   #Function to handle invalid data text files
@@ -330,13 +330,13 @@ locDD <- function(donor1_data, donor2_data,recipient_data,markers) {
   # d2Data <- read.delim(d2data$datapath)
   # rData <- read.delim(rdata$datapath)
   
-  # d1Data <- read.delim(donor1_data, sep='\t')
-  # d2Data <- read.delim(donor2_data, sep='\t')
-  # rData <- read.delim(recipient_data, sep= '\t')
+  d1Data <- read.delim(donor1_data, sep='\t')
+  d2Data <- read.delim(donor2_data, sep='\t')
+  rData <- read.delim(recipient_data, sep= '\t')
   
-  d1Data <- data.frame(donor1_data)
-  d2Data <- data.frame(donor2_data)
-  rData <- data.frame(recipient_data)
+  # d1Data <- data.frame(donor1_data)
+  # d2Data <- data.frame(donor2_data)
+  # rData <- data.frame(recipient_data)
   
   #Function to handle invalid data text files
   coherent_input <- function(any_input) {
@@ -777,12 +777,14 @@ chiDD <- function(sdata,markers,profile,ru,rt,rnn,d1nn,d2nn,d1u,d2u,d1t,d2t,r) {
 single_donor <- function(pre_don=NULL,pre_recip=NULL,post=NULL){
   ddata <- clean_pre_file(pre_don)
   # print('--DONOR PEAKS--')
-  # print(ddata)
+  print(ddata)
   rdata <- clean_pre_file(pre_recip)
   # print('--RECIPIENT PEAKS--')
-  # print(rdata)
+  print(rdata)
   
   sdata <- get_informative_marks_sd(ddata, rdata, post)
+  
+  ddata_table <-
   
   loci <- locSD(ddata, rdata, markers)
   
@@ -1000,7 +1002,7 @@ if (opt$workflow == 'pre_don'){
 } else if (opt$workflow == 'sd'){
   single_donor(opt$don1, opt$recip, opt$post)
 } else if (opt$workflow == 'dd'){
-  multi_donor()
+  multi_donor(opt$don1, opt$don2, opt$recip, opt$post)
 } else {
   print('Please make sure your inputs are correct. Use [--help] flag to review.')
 }

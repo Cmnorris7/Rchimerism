@@ -9,7 +9,7 @@ clean_pre_file <- function(file){
       'S:\\UHTL\\3130\\Molecular Lab Data\\Chimerism\\*',
       'Select Peak Report',
       multiple = FALSE,
-      filters = dlg_filters["All",],
+      filters = dlg_filters[c("txt","All")],
       gui = .GUI)
     peak_table <- fread(raw_file$res, sep = '\t', header=TRUE, na.strings=c("","NA"))
   } else{
@@ -39,7 +39,7 @@ clean_pre_file <- function(file){
   # remove V9 column. Not sure where this comes from?
   allele_table <- allele_table[,V9:=NULL]
 
-  # write.table(allele_table, file=paste(raw_file$res,"_TEMP.txt"), quote=FALSE, sep='\t', row.names = FALSE)
+  write.table(allele_table, file=paste(raw_file$res,"_TEMP.txt"), quote=FALSE, sep='\t', row.names = FALSE)
   # print(is.data.frame(allele_table))
   print(allele_table)
   return(allele_table)
@@ -59,15 +59,17 @@ get_informative_marks_sd <- function(donor_tab, recipient_tab, sample_file){
   #   recipient_tab <- file.choose(new = FALSE)
   # }
   if(missing(sample_file)){
-    raw_file <- dlg_open(
+    sample_file <- dlg_open(
       'S:\\UHTL\\3130\\Molecular Lab Data\\Chimerism\\*',
       'Select Peak Report',
       multiple = FALSE,
       filters = dlg_filters["All",],
       gui = .GUI)
-    sample_table <- fread(raw_file$res, sep = '\t', header= TRUE, na.strings=c("", "NA"))
+    sample_file_name <- sample_file$res
+    sample_table <- fread(sample_file_name, sep = '\t', header= TRUE, na.strings=c("", "NA"))
   } else{
-    sample_table <- fread(sample_file, sep = '\t', header= TRUE, na.strings=c("", "NA"))
+    sample_file_name <- sample_file
+    sample_table <- fread(sample_file_name, sep = '\t', header= TRUE, na.strings=c("", "NA"))
   }
   
   # read files into tables
@@ -99,9 +101,9 @@ get_informative_marks_sd <- function(donor_tab, recipient_tab, sample_file){
     }
   }
   # print(final_table)
-  # write.table(final_table, file=paste(sample_file,"_TEMP.txt"), quote=FALSE, sep='\t', row.names = FALSE)
-  return(data.frame(final_table))
-  # return(paste(sample_file,"_TEMP.txt"))
+  write.table(final_table, file=paste(sample_file_name,"_TEMP.txt"), quote=FALSE, sep='\t', row.names = FALSE)
+  # return(data.frame(final_table))
+  return(paste(sample_file_name,"_TEMP.txt"))
 }
 
 
@@ -116,19 +118,22 @@ get_informative_marks_dd <- function(donor1_tab, donor2_tab, recipient_tab, samp
   #   recipient_tab <- file.choose(new = FALSE)
   # }
   if(missing(sample_file)){
-    raw_file <- dlg_open(
+    sample_file <- dlg_open(
       'S:\\UHTL\\3130\\Molecular Lab Data\\Chimerism\\*',
       'Select Peak Report',
       multiple = FALSE,
       filters = dlg_filters["All",],
       gui = .GUI)
-    sample_table <- fread(raw_file$res, sep = '\t', header= TRUE, na.strings=c("", "NA"))
+    sample_file_name <- sample_file$res
+    sample_table <- fread(sample_file_name, sep = '\t', header= TRUE, na.strings=c("", "NA"))
   } else{
-    sample_table <- fread(sample_file, sep = '\t', header= TRUE, na.strings=c("", "NA"))
+    sample_file_name <- sample_file
+    sample_table <- fread(sample_file_name, sep = '\t', header= TRUE, na.strings=c("", "NA"))
   }
   
   # read files into tables
-  # donor_table <- fread(donor_tab, sep = '\t', header= TRUE)
+  # donor1_table <- fread(donor1_tab, sep = '\t', header= TRUE)
+  # donor2_table <- fread(donor2_tab, sep = '\t', header= TRUE)
   donor1_table <- data.table(donor1_tab)
   donor2_table <- data.table(donor2_tab)
   # recipient_table <- fread(recipient_tab, sep = '\t', header= TRUE)
@@ -161,9 +166,9 @@ get_informative_marks_dd <- function(donor1_tab, donor2_tab, recipient_tab, samp
     }
   }
   # print(final_table)
-  # write.table(final_table, file=paste(sample_file,"_TEMP.txt"), quote=FALSE, sep='\t', row.names = FALSE)
-  return(data.frame(final_table))
-  # return(paste(sample_file,"_TEMP.txt"))
+  write.table(final_table, file=paste(sample_file_name,"_TEMP.txt"), quote=FALSE, sep='\t', row.names = FALSE)
+  # return(data.frame(final_table))
+  return(paste(sample_file_name,"_TEMP.txt"))
 }
 
 

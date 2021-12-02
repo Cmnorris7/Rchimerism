@@ -1,3 +1,6 @@
+args = commandArgs(trailingOnly=TRUE)
+
+
 # file to store all Rchimerism functions
 
 
@@ -187,24 +190,24 @@ locDD <- function(donor1_data, donor2_data,recipient_data,markers) {
   
   
   #clean up the raw data (OL, X, '')
-  r = rData[grep("[^[:alpha:]]",rData[,4]),c(3:4,6)];
-  d1 = d1Data[grep("[^[:alpha:]]",d1Data[,4]),c(3:4,6)];
-  d2 = d2Data[grep("[^[:alpha:]]",d2Data[,4]),c(3:4,6)];
+  r = rData[,c(3:4,6)];
+  d1 = d1Data[,c(3:4,6)];
+  d2 = d2Data[,c(3:4,6)];
   
   rr = droplevels(r); #fantom levels can cause problem, rr, dd are tem variables
   dd1 = droplevels(d1);
   dd2 = droplevels(d2);
   
   #get rid of the noise (less than half of the maximum height)
-  maxR = tapply(rr[,3],rr[,1],max)/2;
-  r = rr[rr[,3]>maxR[rr[,1]],];
-  
-  maxD1 = tapply(dd1[,3],dd1[,1],max)/2;
-  d1 = dd1[dd1[,3]>maxD1[dd1[,1]],];
-  
-  maxD2 = tapply(dd2[,3],dd2[,1],max)/2;
-  d2 = dd2[dd2[,3]>maxD2[dd2[,1]],];
-  
+  # maxR = tapply(rr[,3],rr[,1],max)/2;
+  # r = rr[rr[,3]>maxR[rr[,1]],];
+  # 
+  # maxD1 = tapply(dd1[,3],dd1[,1],max)/2;
+  # d1 = dd1[dd1[,3]>maxD1[dd1[,1]],];
+  # 
+  # maxD2 = tapply(dd2[,3],dd2[,1],max)/2;
+  # d2 = dd2[dd2[,3]>maxD2[dd2[,1]],];
+
   #Allele matrix (the matrix) and calculation;
   r[,4] = 'r';
   d1[,4] = 'd1';
@@ -304,8 +307,8 @@ chiSD <- function(sdata,markers,profile,rt,dt,d,r) {
   
   
   #sData <- read.delim(sdata$datapath);
-  # sData <- read.delim(sdata, sep= '\t')
-  sData <- sdata
+  sData <- read.delim(sdata, sep= '\t')
+  # sData <- sdata
   
   #Function to handle invalid data text files
   coherent_input <- function(any_input) {
@@ -322,8 +325,10 @@ chiSD <- function(sdata,markers,profile,rt,dt,d,r) {
     return(ci_r)
   }
   
-  s = sData[grep("[^[:alpha:]]",sData[,4]),c(3:4,7)]; #clean up the raw data
-  #s = s[s[,1]!='DYS391',] #Remove DYS391 locus on Y chromosome
+  s =sData[,c(3:4,7)]
+  # s = sData[grep("[^[:alpha:]]",sData[,4]),c(3:4,7)]; #clean up the raw data
+  print("-----S------")
+  print(s)
   s = droplevels(s);
   s$Allele = as.factor(s$Allele);
   st =  rt;
@@ -334,7 +339,7 @@ chiSD <- function(sdata,markers,profile,rt,dt,d,r) {
   # print(s[!(s[,2] %in% colnames(st)),]);
   
   #check point: remove loci not specified in user markers csv file
-  s = s[(s[,1] %in% rownames(st)),];
+  # s = s[(s[,1] %in% rownames(st)),];
   
   #Handles noisy sample data, outputs table of possible false calls
   if (nrow(s[!(s[,2] %in% colnames(st)),]) != 0) {
@@ -367,7 +372,9 @@ chiSD <- function(sdata,markers,profile,rt,dt,d,r) {
     if (profile[m]==211){
       Ad = s[s[,1]==m & s[,2]==setdiff(d[d[,1]==m,2],r[r[,1]==m,2]),3];
       A = s[s[,1]==m & s[,2]==intersect(d[d[,1]==m,2],r[r[,1]==m,2]),3];
-      
+      print(m)
+      print(Ad)
+      print(A)
       if (length(Ad)==0){
         Ad = 0;
       }
@@ -376,8 +383,10 @@ chiSD <- function(sdata,markers,profile,rt,dt,d,r) {
     
     if (profile[m]==221){
       Ad = s[s[,1]==m & s[,2]==setdiff(d[d[,1]==m,2],r[r[,1]==m,2]),3];
+      # print(C[m])
+      # print(Ad)
       Ar = s[s[,1]==m & s[,2]==setdiff(r[r[,1]==m,2],d[d[,1]==m,2]),3];
-      
+      # print(Ar)
       if (length(Ar)==0){
         Ar = 0;
       }
@@ -424,12 +433,14 @@ chiSD <- function(sdata,markers,profile,rt,dt,d,r) {
   results[l,4]=sd(results[l,2]);
   results[l,5]=results[l,4]/results[l,3];
   results[l,6]=1-results[l,3];
+
   colnames(results)[1] = 'Profile';
   colnames(results)[2] = 'Donor%';
   colnames(results)[3] = 'Donor%_Mean';
   colnames(results)[4] = 'Donor%_SD';
   colnames(results)[5] = 'Donor%_CV';
   colnames(results)[6] = 'Recipient%_Mean';
+
   
   sm = cbind(st,apply(st,1,sum));
   colnames(sm)[length(colnames(sm))] = 'Sum';
@@ -466,8 +477,8 @@ chiDD <- function(sdata,markers,profile,ru,rt,rnn,d1nn,d2nn,d1u,d2u,d1t,d2t,r) {
   print(getwd(),quote=F);
   
   #sData <- read.delim(sdata$datapath);
-  # sData <- read.delim(sdata,sep = '\t')
-  sData <- sdata
+  sData <- read.delim(sdata,sep = '\t')
+  # sData <- sdata
   
   #Function to handle invalid data text files
   coherent_input <- function(any_input) {

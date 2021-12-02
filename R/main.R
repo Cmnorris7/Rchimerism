@@ -8,6 +8,8 @@ source('database.R')
 # install.packages('sqldf')
 # install.packages('data.table')
 # install.packages('RSQLite')
+# install.packages('ggplot2')
+# install.packages('tidyr')
 
 library(svDialogs)
 library(DBI)
@@ -15,6 +17,7 @@ library(RSQLite)
 library(sqldf)
 library(data.table)
 library(svDialogs)
+library(ggplot2)
 
 
 # garbage collection to clear up memory
@@ -22,7 +25,7 @@ gc()
 
 # markers used in chimerism assay. These are static.
 markers = c('D3S1358','TH01','D21S11','D18S51','Penta E','D5S818','D13S317',
-            'D7S820','D16S539','CSF1PO','Penta D','vWA','D8S1179','TPOX','FGA');
+            'D7S820','D16S539','CSF1PO','Penta D','AMEL','vWA','D8S1179','TPOX','FGA');
 
 # Prompt the user to select workflow
 analysis <- dlg_list(
@@ -35,6 +38,7 @@ analysis <- dlg_list(
   gui = .GUI)$res
 
 
+# adds pre-recip & pre-donor peak data to sql database
 pre_analysis <- function(role){
   add <- clean_pre_file()
   add$role <- rep_len(role,nrow(add))
@@ -44,7 +48,6 @@ pre_analysis <- function(role){
 
 
 single_donor <- function(){
-  
   ddata <- clean_pre_file()
   print('--DONOR PEAKS--')
   print(ddata)
@@ -81,7 +84,9 @@ single_donor <- function(){
   print(donor_sd)
   print("--RECIPIENT MEAN--")
   print(recip_mean)
+  to_bargraph_sd(results)
   return(results)
+  
 } 
 
 
@@ -93,7 +98,7 @@ multi_donor <- function(){
   sdata <- get_informative_marks_dd(d1data, d2data, rdata, )
   
   loc_dd_output <- locDD(d1data, d2data, rdata, markers)
-  
+  print(loc_dd_output)
   profile <- loc_dd_output[[2]]
   ru <- loc_dd_output[[3]]
   rt <- loc_dd_output[[4]]
@@ -133,9 +138,45 @@ multi_donor <- function(){
   print(recip_mean)
   print("--RECIPIENT SD--")
   print(recip_sd)  
+  to_bargraph_dd(results)
   return(results)
 }
 
+
+to_bargraph_sd <- function(results){
+  results <- results[complete.cases(results),]
+  Markers <- row.names(results)
+  Donor <- results[,2]
+  Recipient <- (1-Donor)
+  data <- data.frame(Markers,Donor,Recipient)
+  require(tidyr)
+  df.long <- gather(data, Role, Percent, -Markers)
+  print(df.long)
+  plot <- ggplot(data = df.long, aes(x = Markers, y = Percent, fill = Role)) + geom_bar(position="stack", stat="identity") + geom_text(aes(label = round(Percent,2)),size = 3, position = position_stack(vjust = 0.5)) + theme(axis.text.x = element_text(size=8, angle=45, hjust=1.2, vjust=1.2))
+  data <- data.frame(marker=c(row.names(results)),Donor = c(results[,2]))
+  print(data)
+  print(plot)
+}
+
+
+to_bargraph_dd <- function(results){
+  donor1_res <- results[,1]
+  donor2_res <- results[,5]
+  
+   # <- results[complete.cases(results),9]
+  Markers <- row.names(results)
+  Donor1 <- results[,1]
+  Donor2 <- results[,5]
+  Recipient <- results[,9]
+  data <- data.frame(Markers,Donor1,Donor2,Recipient)
+  require(tidyr)
+  df.long <- gather(data, Role, Percent, -Markers)
+  print(df.long)
+  plot <- ggplot(data = df.long, aes(x = Markers, y = Percent, fill = Role)) + geom_bar(position="stack", stat="identity") + geom_text(aes(label = round(Percent,2)),size = 3, position = position_stack(vjust = 0.5)) + theme(axis.text.x = element_text(size=8, angle=45, hjust=1.2, vjust=1.2))
+  data <- data.frame(marker=c(row.names(results)),Donor = c(results[,2]))
+  print(data)
+  print(plot)
+}
 
 fetch_pre_sql <- function(){
   # input = database file
